@@ -31,7 +31,7 @@ train.py contains the code to train and test at the same time and write the expe
 - <b>arguments.txt:</b> Saves the arguments used for running that  experiment
 - <b>train.log:</b> Keeps a log file of terminal during training process.
 
-Experiment folders mentioned in the following section can be downloaded from <a href=" https://drive.google.com/open?id=1FG8arL3IyJIW-0_D0ZyuzAv7fUE1AOYI">here </a>
+Experiment folders mentioned in the following section can be downloaded from [here](https://drive.google.com/open?id=1FG8arL3IyJIW-0_D0ZyuzAv7fUE1AOYI)
 
 # Experiments
 
