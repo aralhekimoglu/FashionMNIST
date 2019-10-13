@@ -8,6 +8,9 @@ There are numerous optimization methods and strategies to use when training CNNs
 
 All of these experiments are described in the following section and code, along with experiments results are shared.
 
+#### Note: This code may be too complex for a task like this but I use this template for my neural network project, which eases the experimental process and debugging problems.
+
+
 # Usage
 
 ## Libraries
