@@ -1,8 +1,12 @@
 # Fashion MNIST
 
-Fashion MNIST is a dataset that consists of 60k images for 10 clothing categories. It has been collected with the purpose of replacing the MNIST challenge, which is now considered an easy challenge. It is a classification task and accuracy is used to evaluate the model performance.
+Fashion MNIST is a dataset that consists of 60k images for 10 clothing categories. It has been collected with the purpose of replacing the MNIST challenge, which is now considered an easy challenge.
 
-In this repository, some architectures, optimizers, augmentation methods and other hyper parameters are experimented. Convolutional neural networks is proven to perform great for vision tasks at feature extraction. Therefore, I choose to use CNN architectures as the main feature extractor and experimented with different number of CNNs to use, using a residual block, batch normalization and dropout, channel dimensions, size of convolution filters. There are numerous optimization methods and strategies to use when training CNNs so in this repo I experimented with different optimizers like SGD and Adam, I tried different learning rates and different learning rate schedulers. Even though Fashion MNIST is more challenging than MNIST, with today's neural network architectures, it is easy to overfit, therefore additional data augmentation strategies are tried like horizontal flipping the image, erasing some parts of the image and translating the image. All of these experiments are described in the following section and code, along with experiments results are shared.
+In this repository, some architectures, optimizers, augmentation methods and other hyper parameters are experimented. Convolutional neural networks is proven to perform great for vision tasks at feature extraction. Therefore, I choose to use CNN architectures as the main feature extractor and experimented with different number of CNNs to use, using a residual block, batch normalization and dropout, channel dimensions, size of convolution filters. 
+
+There are numerous optimization methods and strategies to use when training CNNs so in this repo I experimented with different optimizers like SGD and Adam, I tried different learning rates and different learning rate schedulers. Even though Fashion MNIST is more challenging than MNIST, with today's neural network architectures, it is easy to overfit, therefore additional data augmentation strategies are tried like horizontal flipping the image, erasing some parts of the image and translating the image. 
+
+All of these experiments are described in the following section and code, along with experiments results are shared.
 
 # Usage
 
@@ -31,31 +35,38 @@ Experiment folders mentioned in the following section can be downloaded from <a 
 
 # Experiments
 
+This is a classification task and accuracy is used to evaluate the model performance. For time complexity of the models, test time latencies are compared, which is the forward propogation time for a single batch image with no augmentations.
+
 ## Different Network Structures
 In this experimental setting, base channel dimension is 32 and kernel size is 3, batch normalization is used, dropout is set to 0.2, initial learning rate is set to 0.01, batch size for training is 256 and Adam optimizer is used for training. Following results are average of multiple runs with the same settings.
 
-|             | # of Parameters   |Test Accuracy(%)      | 
-|----------------|-----------------------------| -----------------------------|
-|2 Conv   		 | 50K |92.84            |
-|2 Conv + Residual Block | 76K          |93.11          |
-|4 Conv          | 247K | <b>93.14|
-|4 Conv + Residual Block |402K          |92.98|
+| Network Structure  | # of Parameters   |Test Accuracy(%)      | Test Latency(ms) |
+|--------------------|-------------------|----------------------| -----------------|
+|2 Conv   		     | 50K               |92.84                 | 0.75 
+|2 Conv + Residual Block | 76K           |93.11                 | 1.61
+|4 Conv              | 247K              | <b>93.14             | 1.15
+|4 Conv + Residual Block |402K           |92.98                 |2.84
 
 Based on the results, using residual blocks is not necessary at a task like this where only small number of convolutional blocks are used, so learning do not suffer from lack of gradient flow and increasing the parameter count does not help the network.
+
+Also test time latency also increases with more layers, therefore using fewer layers increases the speed.
+
 
 ## Convolutional Channel Dimension
 
 This parameters is given to the network as input and is the output channel dimension of the first convolution. At each convolution step output channel dimension is doubled. 4 Convolution + Residual block setting from the first experiment are used here.
 
 
-|  Channel Dimension           | # of Parameters   |Test Accuracy(%)      | 
-|----------------|-----------------------------| -----------------------------|
-|32   		 | 402 K |<b>92.98            |
-|64 | 1.48 M          |92.48          |
-|128          | 5.67 M | 92.70|
-|512 |87.54 M          |91.46 |
+|  Channel Dimension           | # of Parameters   |Test Accuracy(%)      | Test Latency(ms) 
+|----------------|---| --------------------------| -----------------------------|
+|32   		 | 402 K |<b>92.98            | 2.84
+|64 | 1.48 M          |92.48          | 2.83
+|128          | 5.67 M | 92.70|  2.82
+|512 |87.54 M          |91.46 | 2.83
 
 Results show that using a higher channel dimension does not increase the test accuracy and cause more overfitting. So moving on with the simplest of these models which is 32 channel dimension makes more sense considering Occam's Razor. 
+
+An interesting remark to make about parallel programming, looking at the test time latency of these different models are that they do not differ significantly based on the channel dimension. The reason is the parallel programming abilities of GPUs and since all these operations are done in parallel for each channel dimension, speed is not affected, although the number of operations increases significantly.
 
 ## Kernel Size
 
@@ -67,7 +78,8 @@ This is size of the convolutional kernels used to extract features for the next 
 |3 | 247 K          |<b>93.14          |
 |5          | 576 K | 92.92|
 
-Since results between 3 and 5 are similar I will move on with the one with smaller number of parameters, i.e. simpler model, which is kernel size with 3.
+Since results between 3 and 5 are similar I will move on with the one with smaller number of parameters, i.e. simpler model, which is kernel size with 3, which is also faster at test time.
+
 
 ## Effect of Batch Normalization
 
