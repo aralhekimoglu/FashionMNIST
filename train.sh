@@ -1,0 +1,17 @@
+python train.py \
+--exp-dir ./experiments/name_of_experiment \
+--data-dir ./data \
+--base-ch-dim 32 \
+--conv-steps 2 \
+--train-batch-size 256 \
+--test-batch-size 256 \
+--workers 4 \
+--kernel-size 3 \
+--dropout 0.2 \
+--use-batchnorm \
+--lr 1e-2 \
+--epochs 200 \
+--lr-scheduler step \
+--save-step 200 \
+--eval-step 2 \
+--augmentations random_hflip random_rotate random_erase \
